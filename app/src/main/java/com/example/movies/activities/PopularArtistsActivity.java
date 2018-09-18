@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 
 import com.example.movies.R;
 import com.example.movies.adapters.PopularArtistsAdapter;
+import com.example.movies.listeners.PaginationScrollListener;
 import com.example.movies.listeners.PopularArtistsListener;
 import com.example.movies.services.APIResponseData.Artist;
 import com.example.movies.utils.Utils;
@@ -23,13 +24,19 @@ import java.util.List;
 
 public class PopularArtistsActivity extends AppCompatActivity implements PopularArtistsListener{
 
-    RecyclerView mRecyclerView;
-    ProgressBar mProgressBar;
-    LinearLayoutManager mLinearLayoutManager;
-    PopularArtistsAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private ProgressBar mProgressBar;
+    private LinearLayoutManager mLinearLayoutManager;
+    private PopularArtistsAdapter mAdapter;
 
     Context mContext;
     PopularArtistsViewModel mViewModel;
+
+    private int mTotalPages = 0;
+    private int mCurrentPage = 1;
+    private boolean mIsLoading = false;
+    private boolean mIsLastPage = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +54,33 @@ public class PopularArtistsActivity extends AppCompatActivity implements Popular
         mRecyclerView.setAdapter(mAdapter);
 
         mViewModel = new PopularArtistsViewModel(mContext, this);
-        mViewModel.getPopularArtists(1);
+        mViewModel.getPopularArtists(mCurrentPage);
+
+
+
+        mRecyclerView.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
+            @Override
+            protected void loadMoreItems() {
+                mIsLoading = true;
+                mCurrentPage += 1;
+                mViewModel.getPopularArtists(mCurrentPage);
+            }
+
+            @Override
+            public int getTotalPageCount() {
+                return mTotalPages;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return mIsLastPage;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return mIsLoading;
+            }
+        });
     }
 
     @Override
@@ -69,14 +102,28 @@ public class PopularArtistsActivity extends AppCompatActivity implements Popular
     }
 
     @Override
-    public void onSuccess(List<Artist> artistList) {
+    public void onSuccess(List<Artist> artistList, int totalPagesNumber, int currentLoadedPage) {
 
-        mProgressBar.setVisibility(View.GONE);
-        Utils.showToast(this, "Success, size=" + artistList.size());
+        mTotalPages = totalPagesNumber;
 
-        if (mAdapter != null) {
-            mAdapter.setArtistsItems(artistList);
-            mAdapter.notifyDataSetChanged();
+        Utils.showToast(this, "Success, Current page:"+ currentLoadedPage +", size=" + artistList.size() + ", total= " + mTotalPages );
+
+        if(mAdapter != null) {
+            if (mCurrentPage == 1) {
+                mProgressBar.setVisibility(View.GONE);
+                mAdapter.setArtistsItems(artistList);
+                mAdapter.notifyDataSetChanged();
+
+                if (mCurrentPage <= mTotalPages) {
+                    mAdapter.addLoadingFooter();
+                }
+            } else {
+                mAdapter.removeLoadingFooter();
+                mIsLoading = false;
+                mAdapter.addAll(artistList);
+                if (mCurrentPage != mTotalPages) mAdapter.addLoadingFooter();
+                else mIsLoading = true;
+            }
         }
     }
 

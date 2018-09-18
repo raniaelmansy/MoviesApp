@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface PopularArtistsListener {
 
-    void onSuccess(List<Artist> artistList);
+    void onSuccess(List<Artist> artistList, int totalPages, int currentPage);
     void onError(String message);
 }
