@@ -1,6 +1,7 @@
 package com.example.movies.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.movies.R;
+import com.example.movies.activities.ArtistImageActivity;
 import com.example.movies.services.APIResponseData.ProfilesItem;
 import com.example.movies.utils.Constants;
 
@@ -51,9 +53,9 @@ public class ArtistImagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         imagesViewHolder.mContainerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(mContext, ArtistDetailsActivity.class);
-//                intent.putExtra(Constants.ARTIST_ID_EXTRA_KEY, artist.getId());
-//                mContext.startActivity(intent);
+                Intent intent = new Intent(mContext, ArtistImageActivity.class);
+                intent.putExtra(Constants.ARTIST_IMAGE_PATH_EXTRA_KEY, profileImage.getFilePath());
+                mContext.startActivity(intent);
             }
         });
     }

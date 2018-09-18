@@ -7,4 +7,6 @@
     <string name="no_internet_connection">There is no internet connection on your device!!</string>
     <string name="popularity">Popularity: %1$s</string>
     <string name="birth">Born: %1$s in %2$s</string>
+    <string name="image_saved_successfully">Image saved successfully in your device gallery under MoviesApp folder</string>
+    <string name="storage_permission_denied">The app was not allowed to write in your storage</string>
 </resources>
