@@ -11,6 +11,8 @@ public abstract class Constants {
     public static final String ImagesPath_w342 = "http://image.tmdb.org/t/p/w342/";
     public static final String ImagesPath_w154 = "http://image.tmdb.org/t/p/w154/";
     public static final String ImagesPath_w92 = "http://image.tmdb.org/t/p/w92/";
+    public static final String ImagesPath_original = "http://image.tmdb.org/t/p/original/";
 
     public static final String ARTIST_OBJECT_EXTRA_KEY = "Artist_Object";
+    public static final String ARTIST_IMAGE_PATH_EXTRA_KEY = "Artist_Image_Path";
 }

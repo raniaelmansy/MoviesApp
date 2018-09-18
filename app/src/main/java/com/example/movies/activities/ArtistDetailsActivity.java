@@ -37,8 +37,8 @@ public class ArtistDetailsActivity extends AppCompatActivity implements ArtistLi
     private TextView mBio;
     private TextView mPopularity;
     private ImageView mProfileImage;
-    ProgressBar mProgressBar;
-    RecyclerView mRecyclerView;
+    private ProgressBar mProgressBar;
+    private RecyclerView mRecyclerView;
 
     Context mContext;
     ArtistsViewModel mViewModel;
