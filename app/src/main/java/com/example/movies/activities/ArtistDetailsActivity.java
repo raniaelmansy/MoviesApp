@@ -29,7 +29,7 @@ import java.util.List;
  * Created by Rania on 9/17/2018.
  */
 
-public class ArtistDetailsActivity extends AppCompatActivity implements ArtistListener{
+public class ArtistDetailsActivity extends AppCompatActivity implements ArtistListener, View.OnClickListener{
 
     private TextView mName;
     private TextView mSpeciality;
@@ -39,6 +39,7 @@ public class ArtistDetailsActivity extends AppCompatActivity implements ArtistLi
     private ImageView mProfileImage;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
+    private ImageView mBackImage;
 
     Context mContext;
     ArtistsViewModel mViewModel;
@@ -66,6 +67,8 @@ public class ArtistDetailsActivity extends AppCompatActivity implements ArtistLi
         mProfileImage = findViewById(R.id.artistImage);
         mProgressBar = findViewById(R.id.main_progress);
         mRecyclerView = findViewById(R.id.main_recycler);
+        mBackImage = findViewById(R.id.backImageView);
+        mBackImage.setOnClickListener(this);
 
         mArtistImagesAdapter = new ArtistImagesAdapter(mContext);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this,3));
@@ -104,6 +107,7 @@ public class ArtistDetailsActivity extends AppCompatActivity implements ArtistLi
                 .load(Constants.ImagesPath_w342 + mArtist.getProfilePath())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                 .centerCrop()
+                .error(R.drawable.default_avatar)
                 .crossFade(1000)
                 .into(mProfileImage);
     }
@@ -141,5 +145,10 @@ public class ArtistDetailsActivity extends AppCompatActivity implements ArtistLi
     public void onError(String message) {
         mProgressBar.setVisibility(View.GONE);
         Utils.showToast(this, "onError: "+ message);
+    }
+
+    @Override
+    public void onClick(View v) {
+        finish();
     }
 }

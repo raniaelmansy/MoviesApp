@@ -55,10 +55,11 @@ public class PopularArtistsViewModel {
     public void onPopularArtistsEvent(PopularArtistsHelper.PopularArtistsEvent popularArtistsEvent) {
         switch (popularArtistsEvent.getEventType()) {
             case Success:
-                mListener.onSuccess(popularArtistsEvent.getArtistList());
+                mListener.onSuccess(popularArtistsEvent.getArtistList(),
+                        popularArtistsEvent.getTotalNumberOfPages(),
+                        popularArtistsEvent.getCurrentPage());
                 break;
             case Error:
-                String errorMessage;
                 mListener.onError(popularArtistsEvent.getErrorMessage());
                 break;
         }

@@ -31,6 +31,7 @@ public class PopularArtistsAdapter extends RecyclerView.Adapter<ViewHolder> {
     Context mContext;
     private static final int ITEM = 0;
     private static final int LOADING = 1;
+    private boolean isLoadingAdded = false;
 
     public PopularArtistsAdapter(Context context){
         mContext = context;
@@ -39,6 +40,10 @@ public class PopularArtistsAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void setArtistsItems(List<Artist> artistsItems) {
         this.mArtistList = artistsItems;
     }
+    public List<Artist> getArtistsItems() {
+        return mArtistList;
+    }
+
 
 
     @Override
@@ -46,16 +51,15 @@ public class PopularArtistsAdapter extends RecyclerView.Adapter<ViewHolder> {
         RecyclerView.ViewHolder viewHolder = null;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        viewHolder = getViewHolder(parent, inflater);
-//        switch (viewType) {
-//            case ITEM:
-//                viewHolder = getViewHolder(parent, inflater);
-//                break;
-//            case LOADING:
-//                View v2 = inflater.inflate(R.layout.item_progress, parent, false);
-//                viewHolder = new LoadingVH(v2);
-//                break;
-//        }
+        switch (viewType) {
+            case ITEM:
+                viewHolder = getViewHolder(parent, inflater);
+                break;
+            case LOADING:
+                View v2 = inflater.inflate(R.layout.item_progress, parent, false);
+                viewHolder = new LoadingViewHolder(v2);
+                break;
+        }
         return viewHolder;
     }
 
@@ -85,6 +89,7 @@ public class PopularArtistsAdapter extends RecyclerView.Adapter<ViewHolder> {
                         .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                         .centerCrop()
                         .crossFade(1000)
+                        .error(R.drawable.default_avatar)
                         .into(artistHolder.mArtistImage);
 
                 artistHolder.mContainerLayout.setOnClickListener(new View.OnClickListener() {
@@ -111,8 +116,7 @@ public class PopularArtistsAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        //return (position == mArtistList.size() - 1 && isLoadingAdded) ? LOADING : ITEM;
-        return ITEM;
+        return (position == mArtistList.size() - 1 && isLoadingAdded) ? LOADING : ITEM;
     }
 
     protected class ArtistsViewHolder extends RecyclerView.ViewHolder {
@@ -131,13 +135,58 @@ public class PopularArtistsAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-//    public class ViewHolder extends RecyclerView.ViewHolder {
-//        ImageView mImage;
-//        TextView mName;
-//        LinearLayout mContainerLayout;
-//
-//        ViewHolder(View view) {
-//            super(view);
-//        }
-//    }
+    protected class LoadingViewHolder extends RecyclerView.ViewHolder {
+
+        public LoadingViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+
+       /*
+   Helpers
+   _________________________________________________________________________________________________
+    */
+
+    public void add(Artist r) {
+        mArtistList.add(r);
+        notifyItemInserted(mArtistList.size() - 1);
+    }
+
+    public void addAll(List<Artist> mArtistList) {
+        for (Artist result : mArtistList) {
+            add(result);
+        }
+    }
+
+    public void remove(Artist r) {
+        int position = mArtistList.indexOf(r);
+        if (position > -1) {
+            mArtistList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public void addLoadingFooter() {
+        isLoadingAdded = true;
+        add(new Artist());
+    }
+
+    public void removeLoadingFooter() {
+        isLoadingAdded = false;
+
+        int position = mArtistList.size() - 1;
+        Artist result = getItem(position);
+
+        if (result != null) {
+            mArtistList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public Artist getItem(int position) {
+        return mArtistList.get(position);
+    }
+
+    //////////////////////////////////////////////////////////////////////
 }

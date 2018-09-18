@@ -47,6 +47,7 @@ public class ArtistImageActivity extends AppCompatActivity implements View.OnCli
     private ImageView mProfileImage;
     private ProgressBar mProgressBar;
     private ImageView mSaveImage;
+    private ImageView mBackImage;
 
     public static final int PERMISSION_REQUEST_ID = 333;
 
@@ -62,9 +63,11 @@ public class ArtistImageActivity extends AppCompatActivity implements View.OnCli
 
         mProfileImage = findViewById(R.id.artistImage);
         mProgressBar = findViewById(R.id.main_progress);
+        mBackImage = findViewById(R.id.backImageView);
         mSaveImage = findViewById(R.id.saveImageView);
         mSaveImage.setOnClickListener(this);
         mSaveImage.setEnabled(false);
+        mBackImage.setOnClickListener(this);
 
         if(mProfileImage != null){
             Glide.with(this)
@@ -92,7 +95,17 @@ public class ArtistImageActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        callDownloadImage();
+
+        switch(v.getId()) {
+            case R.id.saveImageView:
+                callDownloadImage();
+                break;
+
+            case R.id.backImageView:
+                finish();
+                break;
+        }
+
     }
 
     private void callDownloadImage(){

@@ -48,6 +48,7 @@ public class ArtistImagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                 .centerCrop()
                 .crossFade(1000)
+                .error(R.drawable.default_avatar)
                 .into(imagesViewHolder.mArtistImage);
 
         imagesViewHolder.mContainerLayout.setOnClickListener(new View.OnClickListener() {
