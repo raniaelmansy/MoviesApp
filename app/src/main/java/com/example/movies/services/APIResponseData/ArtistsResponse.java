@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class PopularArtistsResponse{
+public class ArtistsResponse {
 
 	@SerializedName("page")
 	private int page;
@@ -53,7 +53,7 @@ public class PopularArtistsResponse{
 	@Override
  	public String toString(){
 		return 
-			"PopularArtistsResponse{" + 
+			"ArtistsResponse{" +
 			"page = '" + page + '\'' + 
 			",total_pages = '" + totalPages + '\'' + 
 			",results = '" + artists + '\'' +

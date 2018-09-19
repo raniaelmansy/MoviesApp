@@ -28,7 +28,7 @@ public class SplashActivity extends AppCompatActivity {
             {
 
                 // Create an Intent that will start the Popular Artists activity.
-                Intent mainIntent = new Intent(SplashActivity.this, PopularArtistsActivity.class);
+                Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
                 SplashActivity.this.startActivity(mainIntent);
                 SplashActivity.this.finish();
 

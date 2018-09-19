@@ -7,7 +7,7 @@ import com.example.movies.services.APIResponseData.Artist;
 import com.example.movies.services.APIResponseData.ArtistProfileResponse;
 import com.example.movies.services.APIResponseData.ProfilesItem;
 import com.example.movies.services.RetrofitServiceGenerator;
-import com.example.movies.services.interfaces.PopularAPIInterface;
+import com.example.movies.services.interfaces.PersonAPIInterface;
 import com.example.movies.utils.Constants;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,19 +22,19 @@ import retrofit2.Response;
  * Created by Rania on 9/16/2018.
  */
 
-public class ArtistHelper {
+public class ArtistDetailsHelper {
 
     private Context mContext;
     private Call<Artist> mArtistResponseCall;
     private Call<ArtistProfileResponse> mArtistProfileResponseCall;
 
-    public ArtistHelper(Context context){
+    public ArtistDetailsHelper(Context context){
         mContext = context;
     }
 
-    PopularAPIInterface popularAPIInterface = RetrofitServiceGenerator.createService(PopularAPIInterface.class);
+    PersonAPIInterface popularAPIInterface = RetrofitServiceGenerator.createService(PersonAPIInterface.class);
 
-    public void getPopularArtists(int artistID) {
+    public void getArtistDetails(int artistID) {
 
         mArtistResponseCall = popularAPIInterface.getArtistDetails(artistID, Constants.API_KEY);
         mArtistResponseCall.enqueue(new Callback<Artist>() {
@@ -42,17 +42,17 @@ public class ArtistHelper {
             public void onResponse(Call<Artist> call, Response<Artist> response) {
                 if (response.body() != null) {
 
-                    EventBus.getDefault().post(new ArtistEvent(ArtistEvent.EventType.SuccessData,
+                    EventBus.getDefault().post(new ArtistDetailsEvent(ArtistDetailsEvent.EventType.SuccessData,
                             response.body()));
                 } else {
-                    EventBus.getDefault().post(new ArtistEvent(ArtistEvent.EventType.Error,
+                    EventBus.getDefault().post(new ArtistDetailsEvent(ArtistDetailsEvent.EventType.Error,
                             mContext.getString(R.string.no_items)));
                 }
             }
 
             @Override
             public void onFailure(Call<Artist> call, Throwable t) {
-                EventBus.getDefault().post(new ArtistEvent(ArtistEvent.EventType.Error,
+                EventBus.getDefault().post(new ArtistDetailsEvent(ArtistDetailsEvent.EventType.Error,
                         mContext.getString(R.string.something_went_wrong)));
             }
         });
@@ -67,41 +67,41 @@ public class ArtistHelper {
                 if(response.body() != null && response.body().getProfiles() != null
                         && response.body().getProfiles().size() != 0){
 
-                    EventBus.getDefault().post(new ArtistEvent(ArtistEvent.EventType.SuccessImages,
+                    EventBus.getDefault().post(new ArtistDetailsEvent(ArtistDetailsEvent.EventType.SuccessImages,
                             response.body().getProfiles()));
 
                 }else{
-                    EventBus.getDefault().post(new ArtistEvent(ArtistEvent.EventType.Error,
+                    EventBus.getDefault().post(new ArtistDetailsEvent(ArtistDetailsEvent.EventType.Error,
                             mContext.getString(R.string.no_items)));
                 }
             }
 
             @Override
             public void onFailure(Call<ArtistProfileResponse> call, Throwable t) {
-                EventBus.getDefault().post(new ArtistEvent(ArtistEvent.EventType.Error,
+                EventBus.getDefault().post(new ArtistDetailsEvent(ArtistDetailsEvent.EventType.Error,
                         mContext.getString(R.string.something_went_wrong)));
             }
         });
     }
 
-    public static class ArtistEvent {
+    public static class ArtistDetailsEvent {
 
         private EventType eventType;
         private String errorMessage;
         private Artist artist;
         private List<ProfilesItem> profilesItems;
 
-        ArtistEvent(EventType eventType, String errorMessage) {
+        ArtistDetailsEvent(EventType eventType, String errorMessage) {
             this.eventType = eventType;
             this.errorMessage = errorMessage;
         }
 
-        ArtistEvent(EventType eventType, Artist artist) {
+        ArtistDetailsEvent(EventType eventType, Artist artist) {
             this.eventType = eventType;
             this.artist = artist;
         }
 
-        ArtistEvent(EventType eventType, List<ProfilesItem> profilesItems) {
+        ArtistDetailsEvent(EventType eventType, List<ProfilesItem> profilesItems) {
             this.eventType = eventType;
             this.profilesItems = profilesItems;
         }

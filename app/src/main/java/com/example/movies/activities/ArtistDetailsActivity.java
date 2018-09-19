@@ -21,7 +21,7 @@ import com.example.movies.services.APIResponseData.Artist;
 import com.example.movies.services.APIResponseData.ProfilesItem;
 import com.example.movies.utils.Constants;
 import com.example.movies.utils.Utils;
-import com.example.movies.viewmodels.ArtistsViewModel;
+import com.example.movies.viewmodels.ArtistDetailsViewModel;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class ArtistDetailsActivity extends AppCompatActivity implements ArtistLi
     private ImageView mBackImage;
 
     Context mContext;
-    ArtistsViewModel mViewModel;
+    ArtistDetailsViewModel mViewModel;
     ArtistImagesAdapter mArtistImagesAdapter;
     private Artist mArtist;
 
@@ -57,7 +57,7 @@ public class ArtistDetailsActivity extends AppCompatActivity implements ArtistLi
         }
 
         mContext = this;
-        mViewModel = new ArtistsViewModel(mContext, this);
+        mViewModel = new ArtistDetailsViewModel(mContext, this);
 
         mName = findViewById(R.id.nameTextView);
         mSpeciality = findViewById(R.id.specialityTextView);

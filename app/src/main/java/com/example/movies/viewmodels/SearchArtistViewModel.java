@@ -3,8 +3,8 @@ package com.example.movies.viewmodels;
 import android.content.Context;
 
 import com.example.movies.R;
-import com.example.movies.listeners.PopularArtistsListener;
-import com.example.movies.services.helper.ArtistsHelper;
+import com.example.movies.listeners.SearchListener;
+import com.example.movies.services.helper.SearchArtistHelper;
 import com.example.movies.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -15,16 +15,16 @@ import org.greenrobot.eventbus.ThreadMode;
  * Created by Rania on 9/16/2018.
  */
 
-public class PopularArtistsViewModel {
+public class SearchArtistViewModel {
 
     Context mContext;
-    PopularArtistsListener mListener;
-    ArtistsHelper mPopularArtistsHelper;
+    SearchListener mListener;
+    SearchArtistHelper mSearchArtistHelper;
 
-    public PopularArtistsViewModel(Context context, PopularArtistsListener popularArtistsListener){
+    public SearchArtistViewModel(Context context, SearchListener searchListener){
         mContext = context;
-        mListener = popularArtistsListener;
-        mPopularArtistsHelper = new ArtistsHelper(mContext);
+        mListener = searchListener;
+        mSearchArtistHelper = new SearchArtistHelper(mContext);
     }
 
     public void onResume() {
@@ -43,24 +43,27 @@ public class PopularArtistsViewModel {
         mListener = null;
     }
 
-    public void getPopularArtists(int pageNumber){
+    public void searchArtists(int pageNumber, String queryString){
         if (Utils.isInternetConnectionExist(mContext)) {
-            mPopularArtistsHelper.getPopularArtists(pageNumber);
+            mSearchArtistHelper.searchArtists(pageNumber, queryString);
         }else{
             mListener.onError(mContext.getString(R.string.no_internet_connection));
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onArtistsEvent(ArtistsHelper.ArtistsEvent popularArtistsEvent) {
-        switch (popularArtistsEvent.getEventType()) {
+    public void onSearchArtistsEvent(SearchArtistHelper.SearchArtistsEvent artistsEvent) {
+        switch (artistsEvent.getEventType()) {
             case Success:
-                mListener.onSuccess(popularArtistsEvent.getArtistList(),
-                        popularArtistsEvent.getTotalNumberOfPages(),
-                        popularArtistsEvent.getCurrentPage());
+                mListener.onSuccess(artistsEvent.getArtistList(),
+                        artistsEvent.getTotalNumberOfPages(),
+                        artistsEvent.getCurrentPage(), artistsEvent.getQueryString());
                 break;
             case Error:
-                mListener.onError(popularArtistsEvent.getErrorMessage());
+                mListener.onError(artistsEvent.getErrorMessage());
+                break;
+            case NoResults:
+                mListener.onNoResults();
                 break;
         }
     }

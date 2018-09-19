@@ -167,6 +167,13 @@ public class PopularArtistsAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
+    public void clear() {
+        isLoadingAdded = false;
+        while (getItemCount() > 0) {
+            remove(getItem(0));
+        }
+    }
+
     public void addLoadingFooter() {
         isLoadingAdded = true;
         add(new Artist());
