@@ -107,7 +107,7 @@ public class PopularArtistsFragment extends Fragment implements PopularArtistsLi
 
         mTotalPages = totalPagesNumber;
 
-        Utils.showToast(mContext, "Success, Current page:"+ currentLoadedPage +", size=" + artistList.size() + ", total= " + mTotalPages );
+        //Utils.showToast(mContext, "Success, Current page:"+ currentLoadedPage +", size=" + artistList.size() + ", total= " + mTotalPages );
 
         if(mAdapter != null) {
             if (mCurrentPage == 1) {

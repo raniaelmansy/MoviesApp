@@ -122,6 +122,7 @@ public class ArtistDetailsActivity extends AppCompatActivity implements ArtistLi
         mBio.setText(artist.getBiography());
         double popularity =  Math.round(artist.getPopularity());
         mPopularity.setText(mContext.getString(R.string.popularity, String.valueOf(popularity)));
+        // Load profile picture again, sometimes it is not the same as in artistList data
         Glide.with(mContext)
                 .load(Constants.ImagesPath_w342 + artist.getProfilePath())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
@@ -132,7 +133,7 @@ public class ArtistDetailsActivity extends AppCompatActivity implements ArtistLi
 
     @Override
     public void onGetArtistImagesSuccess(List<ProfilesItem> profilesItems) {
-        Utils.showToast(this, "Success, size=" + profilesItems.size());
+       // Utils.showToast(this, "Success, size=" + profilesItems.size());
         mProgressBar.setVisibility(View.GONE);
         if (mArtistImagesAdapter != null) {
             mArtistImagesAdapter.setProfilesItems(profilesItems);

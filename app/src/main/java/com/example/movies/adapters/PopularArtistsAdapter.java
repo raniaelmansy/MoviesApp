@@ -27,8 +27,8 @@ import java.util.List;
 
 public class PopularArtistsAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-    List<Artist> mArtistList;
-    Context mContext;
+    private List<Artist> mArtistList;
+    private Context mContext;
     private static final int ITEM = 0;
     private static final int LOADING = 1;
     private boolean isLoadingAdded = false;
@@ -40,10 +40,6 @@ public class PopularArtistsAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void setArtistsItems(List<Artist> artistsItems) {
         this.mArtistList = artistsItems;
     }
-    public List<Artist> getArtistsItems() {
-        return mArtistList;
-    }
-
 
 
     @Override

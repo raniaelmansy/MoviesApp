@@ -11,8 +11,10 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.movies.R;
 import com.example.movies.adapters.PopularArtistsAdapter;
@@ -36,6 +38,8 @@ public class SearchFragment extends Fragment implements SearchListener{
     private ProgressBar mProgressBar;
     private LinearLayoutManager mLinearLayoutManager;
     private PopularArtistsAdapter mAdapter;
+    private Button mSearchButton;
+    private TextView mResultsLabelTextView;
 
     Context mContext;
     SearchArtistViewModel mViewModel;
@@ -55,6 +59,8 @@ public class SearchFragment extends Fragment implements SearchListener{
         mSearchText = rootView.findViewById(R.id.searchEditText);
         mRecyclerView = rootView.findViewById(R.id.main_recycler);
         mProgressBar = rootView.findViewById(R.id.main_progress);
+        mSearchButton = rootView.findViewById(R.id.searchButton);
+        mResultsLabelTextView = rootView.findViewById(R.id.resultsLabelTextView);
         mProgressBar.setVisibility(View.GONE);
 
         mLinearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
@@ -66,34 +72,42 @@ public class SearchFragment extends Fragment implements SearchListener{
         mViewModel = new SearchArtistViewModel(mContext, this);
 
         mCurrentQueryString = mSearchText.getText().toString().trim();
+        mSearchButton.setEnabled(false);
 
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                Utils.hideSoftKeyboard(getActivity(), null);
+                String searchQuery = mSearchText.getText().toString();
+
+                mCurrentQueryString = searchQuery;
+                mCurrentPage = 1;
+                mAdapter.clear();
+                mAdapter.notifyDataSetChanged();
+                mProgressBar.setVisibility(View.VISIBLE);
+                mResultsLabelTextView.setText(getString(R.string.search_results, mCurrentQueryString));
+                mViewModel.searchArtists(mCurrentPage, searchQuery);
+            }
+        });
         mSearchText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String searchQuery = s.toString();
 
-                mCurrentQueryString = searchQuery;
-                mCurrentPage = 1;
-
-                if(searchQuery.length() <= 3) {
-                    mAdapter.clear();
-                    mAdapter.notifyDataSetChanged();
-                    mProgressBar.setVisibility(View.GONE);
-                }else{
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    mViewModel.searchArtists(mCurrentPage, searchQuery);
-                }
+               if(searchQuery.length() >= 3){
+                   mSearchButton.setEnabled(true);
+               }else{
+                   mSearchButton.setEnabled(false);
+                   mProgressBar.setVisibility(View.GONE);
+               }
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         mRecyclerView.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
@@ -101,7 +115,7 @@ public class SearchFragment extends Fragment implements SearchListener{
             protected void loadMoreItems() {
                 mIsLoading = true;
                 mCurrentPage += 1;
-                mViewModel.searchArtists(mCurrentPage,mCurrentQueryString);
+                mViewModel.searchArtists(mCurrentPage, mCurrentQueryString);
             }
 
             @Override
@@ -145,7 +159,7 @@ public class SearchFragment extends Fragment implements SearchListener{
     public void onSuccess(List<Artist> artistList, int totalPagesNumber, int currentPage, String queryString) {
         mTotalPages = totalPagesNumber;
 
-        Utils.showToast(mContext, "Success, Current page:"+ currentPage +", size=" + artistList.size() + ", total= " + mTotalPages );
+       // Utils.showToast(mContext, "Current page:"+ currentPage +", size=" + artistList.size() + ", total= " + mTotalPages );
 
         if(mAdapter != null) {
             if (mCurrentPage == 1) {
@@ -160,8 +174,12 @@ public class SearchFragment extends Fragment implements SearchListener{
                 mAdapter.removeLoadingFooter();
                 mIsLoading = false;
                 mAdapter.addAll(artistList);
-                if (mCurrentPage != mTotalPages) mAdapter.addLoadingFooter();
-                else mIsLoading = true;
+                if (mCurrentPage != mTotalPages) {
+                    mAdapter.addLoadingFooter();
+                }
+                else {
+                    mIsLoading = true;
+                }
             }
         }
     }
@@ -174,9 +192,9 @@ public class SearchFragment extends Fragment implements SearchListener{
 
     @Override
     public void onNoResults() {
+        mProgressBar.setVisibility(View.GONE);
         Utils.showToast(mContext, getString(R.string.no_items));
         mAdapter.clear();
         mAdapter.notifyDataSetChanged();
-        mProgressBar.setVisibility(View.GONE);
     }
 }

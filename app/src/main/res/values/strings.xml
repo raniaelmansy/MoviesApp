@@ -11,4 +11,6 @@
     <string name="storage_permission_denied">The app was not allowed to write in your storage</string>
     <string name="search">Artists Search</string>
     <string name="search_for_artists">Search Artists</string>
+    <string name="search_button">Search</string>
+    <string name="search_results">Search results for: %1$s</string>
 </resources>

@@ -17,9 +17,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class SearchArtistViewModel {
 
-    Context mContext;
-    SearchListener mListener;
-    SearchArtistHelper mSearchArtistHelper;
+    private Context mContext;
+    private SearchListener mListener;
+    private SearchArtistHelper mSearchArtistHelper;
 
     public SearchArtistViewModel(Context context, SearchListener searchListener){
         mContext = context;

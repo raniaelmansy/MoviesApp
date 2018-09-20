@@ -17,9 +17,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class PopularArtistsViewModel {
 
-    Context mContext;
-    PopularArtistsListener mListener;
-    ArtistsHelper mPopularArtistsHelper;
+    private Context mContext;
+    private PopularArtistsListener mListener;
+    private ArtistsHelper mPopularArtistsHelper;
 
     public PopularArtistsViewModel(Context context, PopularArtistsListener popularArtistsListener){
         mContext = context;

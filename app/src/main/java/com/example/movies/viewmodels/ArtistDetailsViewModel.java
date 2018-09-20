@@ -17,9 +17,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class ArtistDetailsViewModel {
 
-    Context mContext;
-    ArtistListener mListener;
-    ArtistDetailsHelper mArtistHelper;
+    private Context mContext;
+    private ArtistListener mListener;
+    private ArtistDetailsHelper mArtistHelper;
 
     public ArtistDetailsViewModel(Context context, ArtistListener artistsListener){
         mContext = context;
@@ -69,7 +69,6 @@ public class ArtistDetailsViewModel {
                 mListener.onGetArtistImagesSuccess(artistEvent.getProfilesItems());
                 break;
             case Error:
-                String errorMessage;
                 mListener.onError(artistEvent.getErrorMessage());
                 break;
         }
