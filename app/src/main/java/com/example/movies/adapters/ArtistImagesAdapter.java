@@ -24,8 +24,8 @@ import java.util.List;
 
 public class ArtistImagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<ProfilesItem> mProfilesItems;
-    Context mContext;
+    private List<ProfilesItem> mProfilesItems;
+    private Context mContext;
 
     public ArtistImagesAdapter(Context context){
         mContext = context;
@@ -34,8 +34,8 @@ public class ArtistImagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.artist_image_item_list, null);
-        RecyclerView.ViewHolder viewHolder = new ImagesViewHolder(view);
-        return viewHolder;
+        return new ImagesViewHolder(view);
+
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ArtistImagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         mProfilesItems = profilesItems;
     }
 
-    protected class ImagesViewHolder extends RecyclerView.ViewHolder {
+    private class ImagesViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView mArtistImage;
         private LinearLayout mContainerLayout;

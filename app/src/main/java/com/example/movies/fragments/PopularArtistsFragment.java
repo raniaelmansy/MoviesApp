@@ -1,11 +1,14 @@
-package com.example.movies.activities;
+package com.example.movies.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.movies.R;
@@ -19,10 +22,10 @@ import com.example.movies.viewmodels.PopularArtistsViewModel;
 import java.util.List;
 
 /**
- * Created by Rania on 9/16/2018.
+ * Created by Rania on 9/19/2018.
  */
 
-public class PopularArtistsActivity extends AppCompatActivity implements PopularArtistsListener{
+public class PopularArtistsFragment extends Fragment implements PopularArtistsListener {
 
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
@@ -37,17 +40,16 @@ public class PopularArtistsActivity extends AppCompatActivity implements Popular
     private boolean mIsLoading = false;
     private boolean mIsLastPage = false;
 
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_popular_artists);
-        mContext = this;
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_popular_artists, container, false);
+        mContext = getActivity();
 
-        mRecyclerView = findViewById(R.id.main_recycler);
-        mProgressBar = findViewById(R.id.main_progress);
+        mRecyclerView = rootView.findViewById(R.id.main_recycler);
+        mProgressBar = rootView.findViewById(R.id.main_progress);
 
-        mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mLinearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         mAdapter = new PopularArtistsAdapter(mContext);
@@ -55,8 +57,6 @@ public class PopularArtistsActivity extends AppCompatActivity implements Popular
 
         mViewModel = new PopularArtistsViewModel(mContext, this);
         mViewModel.getPopularArtists(mCurrentPage);
-
-
 
         mRecyclerView.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
             @Override
@@ -81,23 +81,24 @@ public class PopularArtistsActivity extends AppCompatActivity implements Popular
                 return mIsLoading;
             }
         });
+        return rootView;
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         mViewModel.onResume();
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         mViewModel.onPause();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mViewModel.onDestroy();
     }
 
@@ -106,7 +107,7 @@ public class PopularArtistsActivity extends AppCompatActivity implements Popular
 
         mTotalPages = totalPagesNumber;
 
-        Utils.showToast(this, "Success, Current page:"+ currentLoadedPage +", size=" + artistList.size() + ", total= " + mTotalPages );
+        //Utils.showToast(mContext, "Success, Current page:"+ currentLoadedPage +", size=" + artistList.size() + ", total= " + mTotalPages );
 
         if(mAdapter != null) {
             if (mCurrentPage == 1) {
@@ -130,6 +131,7 @@ public class PopularArtistsActivity extends AppCompatActivity implements Popular
     @Override
     public void onError(String message) {
         mProgressBar.setVisibility(View.GONE);
-        Utils.showToast(this, "onError: "+ message);
+        Utils.showToast(mContext, "onError: "+ message);
     }
+
 }

@@ -8,10 +8,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 /**
  * Created by Rania on 12/15/2016.
  */
@@ -52,19 +48,6 @@ public abstract class Utils {
                 imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
             }
         }
-    }
-
-    public static void hideSoftKeyboard(View focus, View focusLayout) {
-        if (focus != null) {
-            InputMethodManager imm = (InputMethodManager) focus.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            focusLayout.requestFocus();
-            imm.hideSoftInputFromWindow(focus.getWindowToken(), 0);
-        }
-    }
-
-    public static String formatDateToStringWithFormat(Date date, String format) {
-        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
-        return sdf.format(date);
     }
 
     public static void showToast(Context context, String msg) {

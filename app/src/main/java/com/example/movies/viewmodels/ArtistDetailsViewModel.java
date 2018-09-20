@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.example.movies.R;
 import com.example.movies.listeners.ArtistListener;
-import com.example.movies.services.helper.ArtistHelper;
+import com.example.movies.services.helper.ArtistDetailsHelper;
 import com.example.movies.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -15,16 +15,16 @@ import org.greenrobot.eventbus.ThreadMode;
  * Created by Rania on 9/16/2018.
  */
 
-public class ArtistsViewModel {
+public class ArtistDetailsViewModel {
 
-    Context mContext;
-    ArtistListener mListener;
-    ArtistHelper mArtistHelper;
+    private Context mContext;
+    private ArtistListener mListener;
+    private ArtistDetailsHelper mArtistHelper;
 
-    public ArtistsViewModel(Context context, ArtistListener artistsListener){
+    public ArtistDetailsViewModel(Context context, ArtistListener artistsListener){
         mContext = context;
         mListener = artistsListener;
-        mArtistHelper = new ArtistHelper(mContext);
+        mArtistHelper = new ArtistDetailsHelper(mContext);
     }
 
     public void onResume() {
@@ -45,7 +45,7 @@ public class ArtistsViewModel {
 
     public void getArtistData(int artistID){
         if (Utils.isInternetConnectionExist(mContext)) {
-            mArtistHelper.getPopularArtists(artistID);
+            mArtistHelper.getArtistDetails(artistID);
         }else{
             mListener.onError(mContext.getString(R.string.no_internet_connection));
         }
@@ -60,7 +60,7 @@ public class ArtistsViewModel {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onArtistEvent(ArtistHelper.ArtistEvent artistEvent) {
+    public void onArtistDetailsEvent(ArtistDetailsHelper.ArtistDetailsEvent artistEvent) {
         switch (artistEvent.getEventType()) {
             case SuccessData:
                 mListener.onGetArtistDataSuccess(artistEvent.getArtist());
@@ -69,7 +69,6 @@ public class ArtistsViewModel {
                 mListener.onGetArtistImagesSuccess(artistEvent.getProfilesItems());
                 break;
             case Error:
-                String errorMessage;
                 mListener.onError(artistEvent.getErrorMessage());
                 break;
         }

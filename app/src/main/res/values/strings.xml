@@ -9,4 +9,8 @@
     <string name="birth">Born: %1$s in %2$s</string>
     <string name="image_saved_successfully">Image saved successfully in your device gallery under MoviesApp folder</string>
     <string name="storage_permission_denied">The app was not allowed to write in your storage</string>
+    <string name="search">Artists Search</string>
+    <string name="search_for_artists">Search Artists</string>
+    <string name="search_button">Search</string>
+    <string name="search_results">Search results for: %1$s</string>
 </resources>
